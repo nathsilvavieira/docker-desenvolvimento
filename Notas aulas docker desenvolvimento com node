@@ -1,0 +1,103 @@
+Docker para desenvolvimento
+
+Para quem vai começar a usar o Docker Desktop, é importante fazer algumas configurações para otimizar o uso de recursos dele na sua máquina. No vídeo que eu citei na aula anterior tem todas estas configurações, veja o vídeo: https://www.youtube.com/watch?v=99dCerRKO6s
+
+Imagem base usando comando:
+
+$docker build -t nome-imagem -f Docerfile.base .
+
+- Imagem deve ser mais procima do ambienate de produção 
+- Imagem deve ser compativel com ambiente de execução, para evitar problemas compatibilidade
+- Recomendado usar imagens oficiais 
+
+- Imagens menores:
+Alpine linux
+Delbian Slim
+Busybox 
+Scratch
+Distroless 
+
+Dica ****
+	Juntar comandos RUN quando possivel pra evitar criação de mais layers, pode se usar contrabarra \
+-y para não perguntar no build
+***
+
+- Para forçar que baixe os pacotes 
+$Dockerfile.dev --no-cache .
+
+Dica***
+	Toda imagem vem com usuário padrão e normalmente é o root, mas é bom evitar usar o usuário root, porque ele tem todas as permissões e pode fazer qualquer coisa no container. fazer qualquer coisa no container.
+ 	Se os arquivos forem criados dentro do container com o usuário root com o padrão, pertencerão ao root. Se você abrir esses arquivos na sua IDE e tentar editar, vai dar erro de permissão, vai dar aquele famoso permission denied.
+***
+
+Inicializar imagem e abrindo terminal bash
+$docker run -v $(pwd):/app -it minha-imagem-node bash
+
+Criar usuario adicionando comando no Dockerfile
+#debian
+ -RUN useradd -m -u 1000 nome-usuario
+ -RUN usermod -u 1000 nome-usuario
+#alpine
+RUN adduser -D -u 1000 nome-usuario 
+RUN sed -i 's/1000/1001/g' etc/passwd
+
+Dica ***
+	Depois de ter feito tudo o que era necessário, todas as configurações, o copy e afins, que foram realizados com o usuário root, deixe o usuário root apenas para esses procedimentos, defina o seu o seu usuário não root, e, a partir de então, você terá permissões limitadas para preparar a aplicação para rodar.
+***
+
+Diretorio define onde sera executado importante que seja diretorio onde usuario tem permissão de escrita. 
+
+Cacheamento com Docker 
+COPY de para 
+
+Caso node ***
+node_modules > container 
+-v $(pwd):home/node/app
+script de inicialização >npm install
+copia home/node/cache para home/node/app - rsync
+****
+
+Volume sempre pra sincronizar arquivos da nossa maquica com o o container 
+Sempre edita arquivo gist vai pro container 
+#host - arquivos === var/lib/docker....-> mount -> container
+
+
+$-v $(pwd):home/node/app:cached -A sincronia dos arquivos vai ter um atraso pra minha maquina (DevContainer)
+
+
+Video - https://www.youtube.com/watch?v=fC7ZDGHpTUQ
+
+
+O comando EXPOSE apenas documentação uma boa pratica para deixar mais claro no codigo
+
+
+CMD E ENTRYPOINT vai rodar quando iniciado
+
+Quando adicionado CMD vai executar o comando que está configurado, porem se eu alterar ao passar o Docker run ele vai substituir EX: 
+$docker run -it minha-imagem-node - Executa comando do dockerfile
+$docker run -it minha-imagem-node bash - Executa o comando bash informado no docker run
+
+
+
+#CMD ["tail", "-f", "/dev/null"]
+Vai manter seu container em pé, comando -f vai ler infinitamente
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
