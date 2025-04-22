@@ -84,11 +84,19 @@ Vai manter seu container em pé, comando -f vai ler infinitamente
 
 
 
+subir imagem docker compose 
+$docker compose -f docker-compose.dev.yaml up --build
 
+acessar terminal imagem 
+$docker compose -f docker-compose.dev.yaml exec web bash
 
+apagar imagens inutilizadas 
+docker system prune
 
+Env.file Criação de variaveis de ambiente. 
 
-
+Depends_on 
+Restart: on_failur:5 pode restartar ate 5 vezes no maximo
 
 
 
