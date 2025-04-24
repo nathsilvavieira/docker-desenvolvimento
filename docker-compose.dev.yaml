@@ -1,3 +1,5 @@
+include:
+  - ./external-api/docker-compose.external-api.yaml
 services:
   web:
     build: 
@@ -13,7 +15,8 @@ services:
       db:
         condition: service_healthy
        # restart: true #se container falhar ele vai reiniciar pra tentar recuperar
-
+    networks:
+      - external-api_default
   db:
     image: mysql:8.0.30-debian
     environment:
@@ -23,5 +26,10 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s # com que frequência o healthcheck é executado
       timeout: 5s # quanto tempo esperar antes de considerar o healthcheck falhado
-      retries: 5 # número de tentativas antes de considerar o container como falhado
-      start_period: 10s  #Tempo de espera antes de iniciar o healthcheck
+      retries: 5 # número de tentativas antes de considerar o container como falhado    start_period: 10s  #Tempo de espera antes de iniciar o healthcheck
+    networks:
+      - external-api_default
+
+networks:
+  external-api_default:
+    external: true

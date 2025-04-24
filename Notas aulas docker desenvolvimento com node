@@ -98,10 +98,14 @@ Env.file Criação de variaveis de ambiente.
 Depends_on 
 Restart: on_failur:5 pode restartar ate 5 vezes no maximo
 
+Docker compose -f docker-compose.dev.yaml up 
 
+logar na Network 
+docker compose -f docker-compose.dev.yaml exec external-api bash
 
-
-
+Teste
+npm start 
+localhost:3000/external-api
 
 
 
